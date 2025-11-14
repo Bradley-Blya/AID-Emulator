@@ -1,2 +1,2 @@
 # AID-Emulator
-An emulator if AI dungeon environment, so you can text your scripts locally, typing ai output by hand
+An emulator of AI dungeon environment, so you can test your scripts locally, typing ai output by hand
