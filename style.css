@@ -1,0 +1,131 @@
+/* GLOBAL RESET — DO NOT OVERRIDE DISPLAY PROPERTIES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+}
+
+/* ------------------- */
+/* TABS BAR            */
+/* ------------------- */
+#topTabs {
+    background: #222;
+    padding: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+#topTabs .tab {
+    padding: 6px 12px;
+    background: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* ------------------- */
+/* MAIN FLEX ROW       */
+/* ------------------- */
+
+#mainFlexRow {
+    flex: 1;                        /* Fill available vertical space */
+    display: flex !important;       /* <-- FORCES HORIZONTAL LAYOUT */
+    flex-direction: row !important; /* <-- EVEN IF RESET CSS EXISTS */
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;               /* prevents overflow scrolling */
+}
+
+/* ------------------- */
+/* LEFT PANE (TEXT)    */
+/* ------------------- */
+
+#mainScreenContainer {
+    flex: 2;                        /* left pane bigger */
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    color: #eee;
+    border: 1px solid #555;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Scrollable text window */
+#mainScreen {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* Mode buttons */
+#modeButtons {
+    padding: 5px;
+    display: flex;
+    gap: 4px;
+    background: #222;
+    border-top: 1px solid #444;
+}
+
+#modeButtons button {
+    padding: 4px 10px;
+    background: #333;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* Input bar */
+#inputBar {
+    display: flex;
+    padding: 6px;
+    gap: 6px;
+    background: #111;
+    border-top: 1px solid #333;
+}
+
+#emulatorInput {
+    flex: 1;
+    padding: 6px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #444;
+}
+
+#emulatorSubmit {
+    padding: 6px 12px;
+    background: #444;
+    color: white;
+    border: none;
+}
+
+/* ------------------- */
+/* RIGHT PANE (CONSOLE)*/
+/* ------------------- */
+
+#consoleContainer {
+    flex: 1;                        /* slightly smaller */
+    background: #181818;
+    border: 1px solid #555;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#emulatorConsole {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    color: #9cf;
+    font-size: 14px;
+}
