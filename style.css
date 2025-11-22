@@ -1,4 +1,6 @@
-/* GLOBAL RESET — DO NOT OVERRIDE DISPLAY PROPERTIES */
+/* ------------------- */
+/* GLOBAL RESET         */
+/* ------------------- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,60 +15,111 @@ body {
 }
 
 /* ------------------- */
-/* TABS BAR            */
+/* TOP TABS BAR         */
 /* ------------------- */
 #topTabs {
+    flex: none;                 /* fixed height */
     background: #222;
-    padding: 5px;
+    border-bottom: 1px solid #444;
     display: flex;
-    gap: 5px;
 }
 
-#topTabs .tab {
-    padding: 6px 12px;
-    background: #444;
-    color: white;
+.tab-button {
+    padding: 10px 16px;
+    background: #222;
     border: none;
+    border-right: 1px solid #444;
+    color: #ccc;
     cursor: pointer;
 }
 
-/* ------------------- */
-/* MAIN FLEX ROW       */
-/* ------------------- */
-
-#mainFlexRow {
-    flex: 1;                        /* Fill available vertical space */
-    display: flex !important;       /* <-- FORCES HORIZONTAL LAYOUT */
-    flex-direction: row !important; /* <-- EVEN IF RESET CSS EXISTS */
-    gap: 8px;
-    padding: 8px;
-    overflow: hidden;               /* prevents overflow scrolling */
+.tab-button.active {
+    background: #333;
+    color: #fff;
 }
 
 /* ------------------- */
-/* LEFT PANE (TEXT)    */
+/* TAB CONTENT          */
 /* ------------------- */
+.tab-content {
+    flex: 1;                     /* fills remaining viewport below topTabs */
+    display: none;
+    flex-direction: column;
+    overflow: hidden;            /* prevents tab from scrolling */
+}
 
-#mainScreenContainer {
-    flex: 2;                        /* left pane bigger */
+
+
+.tab-content.active {
+  display: flex;
+}
+
+/* ------------------- */
+/* MAIN FLEX ROW        */
+/* ------------------- */
+#mainFlexRow {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;            /* prevents row from scrolling */
+}
+
+/* ------------------- */
+/* LEFT & RIGHT PANES   */
+/* ------------------- */
+#mainScreenContainer,
+#consoleContainer {
     display: flex;
     flex-direction: column;
+    overflow: hidden;            /* ensures internal scrolling only */
+}
+
+#mainScreenContainer {
+    flex: 2;                      /* left pane bigger */
     background: #111;
     color: #eee;
     border: 1px solid #555;
     border-radius: 6px;
-    overflow: hidden;
 }
 
-/* Scrollable text window */
-#mainScreen {
+#consoleContainer {
+    flex: 1;                      /* slightly smaller right pane */
+    background: #181818;
+    border: 1px solid #555;
+    border-radius: 6px;
+}
+
+/* ------------------- */
+/* SCROLLABLE WINDOWS   */
+/* ------------------- */
+.window {
     flex: 1;
     padding: 10px;
-    overflow-y: auto;
+    overflow-y: auto;            /* scrolls individually if content overflows */
+    background: #111;
+    border-radius: 6px;
+    border: 1px solid #555;
+    color: #eee;
     white-space: pre-wrap;
 }
 
-/* Mode buttons */
+#emulatorConsole {
+    color: #9cf;                 /* console-specific color */
+    font-size: 14px;
+}
+
+/* mainScreen uses default .window styles */
+
+/* ------------------- */
+/* MODE BUTTONS & INPUT */
+/* ------------------- */
+#modeButtons, #inputBar {
+    flex: none;                  /* do not expand, stay fixed height */
+    margin-top: 4px;
+}
+
 #modeButtons {
     padding: 5px;
     display: flex;
@@ -83,7 +136,6 @@ body {
     cursor: pointer;
 }
 
-/* Input bar */
 #inputBar {
     display: flex;
     padding: 6px;
@@ -108,24 +160,25 @@ body {
 }
 
 /* ------------------- */
-/* RIGHT PANE (CONSOLE)*/
+/* OPTIONAL: CUSTOM SCROLLBARS */
 /* ------------------- */
-
-#consoleContainer {
-    flex: 1;                        /* slightly smaller */
-    background: #181818;
-    border: 1px solid #555;
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* Chrome, Edge, Safari */
+.window::-webkit-scrollbar {
+    width: 10px;
 }
 
-#emulatorConsole {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    color: #9cf;
-    font-size: 14px;
+.window::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+.window::-webkit-scrollbar-track {
+    background: #111;
+    border-radius: 5px;
+}
+
+/* Firefox */
+.window {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #111;
 }

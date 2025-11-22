@@ -242,6 +242,10 @@ class Emulator {
                 "Emulator: some DOM elements not found. Make sure the HTML matches expected IDs."
             );
         }
+        
+        this.dom.tabPanels = Array.from(
+            document.querySelectorAll('#tabPanels .panel')
+        );
     }
 
 
@@ -301,14 +305,23 @@ class Emulator {
     // 4. Tabs
     // -----------------------------
     bindTabs() {
-        if (!this.dom.tabButtons?.length) return;
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-        this.dom.tabButtons.forEach((tab) => {
-            tab.addEventListener("click", () => {
-                this.switchTab(tab.dataset.tab);
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const target = button.dataset.tab;
+
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                button.classList.add('active');
+                document.getElementById(target).classList.add('active');
             });
         });
     }
+
+
 
     // -----------------------------
     // DOM wiring done
@@ -335,25 +348,27 @@ class Emulator {
         this.renderer_log(`Mode selected: ${mode}`);
     }
 
+
+
+
     /* -------------------------
          Tab switching: show/hide panels
          Assumes .tabPanel elements exist with id values that match data-tab attributes
          ------------------------- */
-    switchTab(tabId) {
-        if (!this.dom.tabPanels) return;
-        this.dom.tabPanels.forEach((panel) => {
-            if (panel.id === tabId) panel.classList.remove("hidden");
-            else panel.classList.add("hidden");
+    switchTab(tabName) {
+        // Highlight active tab
+        this.dom.tabButtons.forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.tab === tabName);
         });
-        // toggle active on tab buttons
-        if (this.dom.tabButtons) {
-            this.dom.tabButtons.forEach((btn) => {
-                if (btn.dataset.tab === tabId) btn.classList.add("active");
-                else btn.classList.remove("active");
-            });
-        }
-        this.renderer_log(`Switched to tab: ${tabId}`);
+
+        // Show corresponding panel
+        this.dom.tabPanels.forEach(panel => {
+            const shouldShow = panel.dataset.tab === tabName;
+            panel.style.display = shouldShow ? "inline-block" : "none";
+        });
     }
+
+    
 
     /* -------------------------
          renderers: these update DOM content only
@@ -372,10 +387,12 @@ class Emulator {
             : this.buildAIView(context);
 
         this.dom.mainTextWindow.innerHTML = view;
+        
+        this.dom.mainTextWindow.scrollTop =
+            this.dom.mainTextWindow.scrollHeight;
 
         // Side effects remain here
         this.renderer_updateConsoleSnapshot();
-        this.renderer_scrollConsoleToBottom();
     }
 
     buildUserView() 
@@ -443,6 +460,14 @@ class Emulator {
     }
 
     // Utility to scroll console (explicit)
+
+    renderer_scrollConsoleToBottom() {
+        if (this.dom.emulatorConsole) {
+            this.dom.emulatorConsole.scrollTop =
+                this.dom.emulatorConsole.scrollHeight;
+        }
+    }
+
     renderer_scrollConsoleToBottom() {
         if (this.dom.emulatorConsole) {
             this.dom.emulatorConsole.scrollTop =

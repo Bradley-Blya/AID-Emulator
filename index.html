@@ -13,54 +13,54 @@
 </head>
 
 <body>
-
     <!-- TOP TABS BAR -->
     <div id="topTabs">
-        <button class="tab">Emulator</button>
-        <button class="tab">Story Cards</button>
-        <button class="tab">Memory</button>
-        <button class="tab">Sandbox</button>
-        <button class="tab">Debug</button>
+        <button class="tab-button" data-tab="emulator">Emulator</button>
+        <button class="tab-button" data-tab="storycards">Story Cards</button>
+        <button class="tab-button" data-tab="memory">Memory</button>
+        <button class="tab-button" data-tab="sandbox">Sandbox</button>
+        <button class="tab-button" data-tab="debug">Debug</button>
     </div>
 
-    <!-- MAIN HORIZONTAL LAYOUT -->
-    <div id="mainFlexRow">
-        
-        <!-- left COLUMN: CONSOLE LOG -->
-        <div id="consoleContainer">
-            <div id="emulatorConsole">
-                <!-- Console logs appear here -->
+    <div class="tab-content active" id="emulator">
+        <!-- MAIN HORIZONTAL LAYOUT -->
+        <div id="mainFlexRow">
+
+            <!-- LEFT COLUMN: CONSOLE LOG -->
+            <div id="consoleContainer">
+                <div id="emulatorConsole" class="window">
+                    <!-- Console logs appear here -->
+                </div>
             </div>
+
+            <!-- RIGHT COLUMN: MAIN EMULATOR TEXT UI -->
+            <div id="mainScreenContainer">
+                <div id="mainScreen" class="window">
+                    <!-- Emulator text updates go here -->
+                </div>
+
+                <!-- Action Buttons -->
+                <div id="modeButtons">
+                    <button data-mode="start">start</button>
+                    <button data-mode="continue">continue</button>
+                    <button data-mode="do">do</button>
+                    <button data-mode="say">say</button>
+                    <button data-mode="story">story</button>
+                    <button data-mode="see">see</button>
+                </div>
+
+                <!-- Input Bar -->
+                <div id="inputBar">
+                    <input id="emulatorInput" type="text" autocomplete="off">
+                    <button id="emulatorSubmit">Enter</button>
+                </div>
+            </div>
+
         </div>
-
-        <!-- right COLUMN: MAIN EMULATOR TEXT UI -->
-        <div id="mainScreenContainer">
-
-            <div id="mainScreen">
-                <!-- Emulator text updates go here -->
-            </div>
-
-            <!-- Action Buttons -->
-            <div id="modeButtons">
-                <button data-mode="start">start</button>
-                <button data-mode="continue">continue</button>
-                <button data-mode="do">do</button>
-                <button data-mode="say">say</button>
-                <button data-mode="story">story</button>
-                <button data-mode="see">see</button>
-            </div>
-
-            <!-- Input Bar -->
-            <div id="inputBar">
-                <input id="emulatorInput" type="text" autocomplete="off">
-                <button id="emulatorSubmit">Enter</button>
-            </div>
-
-        </div>
-
-
-
     </div>
-
+    
+    <div class="tab-content" id="storycards">
+            Story Cards here...
+    </div>
 </body>
 </html>
