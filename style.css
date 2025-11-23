@@ -96,8 +96,10 @@ body {
 /* ------------------- */
 .window {
     flex: 1;
-    padding: 10px;
+    padding: 10px; 
+    overflow-x: hidden;
     overflow-y: auto;            /* scrolls individually if content overflows */
+    word-break: break-word;
     background: #111;
     border-radius: 6px;
     border: 1px solid #555;

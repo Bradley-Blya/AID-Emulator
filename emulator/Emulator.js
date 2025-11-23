@@ -6,8 +6,7 @@ import {
     history,
     addStoryCard,
     removeStoryCard,
-    updateStoryCard,
-    //log
+    updateStoryCard
 } from "./Parameters.js";
 
 import {
@@ -33,6 +32,8 @@ class Emulator {
         // Keep emulator-specific transient state local:
         this.currentSide = "user"; // "user" or "ai"
         this.selectedMode = "say"; // default selected input mode
+        // per-invocation buffer for sandbox log() calls
+        this.sandboxLogs = [];
         this.dom = {}; // will hold DOM references after wiring
 
         // Optional logger function from parameters.js or opts
@@ -56,7 +57,7 @@ class Emulator {
         // 2) Initial render
         this.renderer_log("Dungeon AI Simulator initialized.");
         this.renderer_updateMainView(); // show initial content
-        history.push({ mode: "start", text: "=== New Session Started ===" });
+        history.push({ mode: "start", text: "" });
     }
 
 
@@ -114,7 +115,6 @@ class Emulator {
         try {
             this.renderer_log(`Processing AI output...`);
             const modified = await this.safeCallHook("outputModifier", rawText);
-            this.renderer_log(`AI -> ${modified}`);
             return modified;
         } catch (err) {
             this.renderer_log("Error processing AI turn: " + err.message);
@@ -145,6 +145,7 @@ class Emulator {
     async safeCallHook(name, arg) {
         try {
             const globals = this.getHookGlobals(arg);
+            this.sandboxLogs = []; // reset log buffer
             let result;
 
             switch (name) {
@@ -159,6 +160,35 @@ class Emulator {
                     break;
                 default:
                     return arg;
+            }
+
+            // Render header + sandbox logs to the emulator console
+            try {
+                const prettyNameMap = {
+                    inputModifier: "Input Modifier",
+                    contextModifier: "Context Modifier",
+                    outputModifier: "Output Modifier",
+                };
+                const headerName = prettyNameMap[name] || name;
+                const ts = new Date().toISOString();
+
+                // Header line (timestamped)
+                this.renderer_appendToConsole(`${headerName} @ ${ts}:`);
+                // Blank line for spacing (matches your example)
+                this.renderer_appendToConsole("");
+
+                // Each sandbox log appears as: Log: "message"
+                for (const entry of this.sandboxLogs) {
+                    // use JSON.stringify to get quotes around string and preserve escapes
+                    this.renderer_appendToConsole(`Log: ${JSON.stringify(entry)}`);
+                }
+
+
+                // Add an empty line after logs to improve readability
+                this.renderer_appendToConsole("");
+            } catch (renderErr) {
+                // if rendering the sandbox logs fails, at minimum continue
+                console.warn("Failed to render sandbox logs:", renderErr);
             }
 
             // Modifier MUST return { text }
@@ -186,9 +216,21 @@ class Emulator {
             storyCards,
             addStoryCard,
             removeStoryCard,
-            updateStoryCard
+            updateStoryCard,
+            log: this.sandboxLog
         };
     }
+
+    sandboxLog = (message) => {
+        try {
+            this.sandboxLogs.push(message);
+
+
+        } catch (e) {
+            // swallow any errors so sandbox can't crash host
+            console.warn("sandbox log failed:", e);
+        }
+    };
 
     /* =================================================================================
          UI: wiring + renderer methods
@@ -447,6 +489,7 @@ class Emulator {
 
     // Generic logger used internally; also calls external log() if available.
     renderer_log(msg) {
+        return
         const timestamp = new Date().toLocaleTimeString();
         const entry = `[${timestamp}] ${msg}`;
         // Append to console UI
@@ -458,6 +501,8 @@ class Emulator {
             // ignore errors from external log
         }
     }
+
+
 
     // Utility to scroll console (explicit)
 
@@ -485,6 +530,9 @@ class Emulator {
             .replace(/\n/g, "<br>");
     }
 }
+
+
+
 
 export const emulator = new Emulator();
 
